@@ -1,0 +1,25 @@
+# Use the official Node.js image as a base
+FROM node:18-bullseye-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies for sharp
+RUN apt-get update && apt-get install -y \
+    libvips-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy package.json and package-lock.json first
+COPY package.json package-lock.json ./
+
+# Install dependencies, ensuring sharp is installed correctly
+RUN npm install --include=optional
+
+# Copy the application files, including the .env file and eventProcessor.js
+COPY . ./
+
+# Optional: Check if .env file is copied (for debugging purposes)
+RUN ls -la && cat .env
+
+# Define the command to run the application
+CMD ["node", "eventProcessor.js"]

@@ -1,0 +1,20 @@
+{
+  "name": "event-processor-container",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@azure/data-tables": "^13.3.0",
+    "@azure/event-hubs": "^5.12.2",
+    "@azure/storage-blob": "^12.26.0",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2",
+    "sharp": "^0.33.5"
+  }
+}

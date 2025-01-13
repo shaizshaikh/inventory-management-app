@@ -1,0 +1,155 @@
+:root {
+    --primary-color: #5d6d7e;
+    /* Soft classic blue */
+    --primary-hover: #34495e;
+    /* Darker shade for hover */
+    --bg-color: #f4f6f7;
+    /* Light background */
+    --form-bg: #ffffff;
+    /* White form background */
+    --text-color: #2c3e50;
+    /* Dark text for readability */
+    --border-color: #ccc;
+    /* Soft border */
+    --input-bg: #ecf0f1;
+    /* Light input background */
+    --placeholder-color: #7f8c8d;
+    /* Light grey placeholder */
+}
+
+.container {
+    max-width: 700px;
+    /* Slightly smaller for a more refined look */
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: var(--form-bg);
+    color: var(--text-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    /* Larger header for classic look */
+    font-family: 'Georgia', serif;
+    /* Elegant font */
+    font-weight: normal;
+    color: var(--primary-color);
+    text-transform: capitalize;
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    /* Increased margin for more space */
+}
+
+.formField label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-family: 'Georgia', serif;
+}
+
+.formField input,
+.formField select,
+.formField textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    /* Softer corners */
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    /* More neutral, readable font */
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.formField input::placeholder,
+.formField textarea::placeholder {
+    color: var(--placeholder-color);
+}
+
+.formField input:focus,
+.formField select:focus,
+.formField textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--primary-color);
+}
+
+.submitButton {
+    display: block;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 14px 20px;
+    border-radius: 4px;
+    /* Softer corners */
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: 'Arial', sans-serif;
+}
+
+.submitButton:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-3px);
+}
+
+.submitButton:active {
+    transform: translateY(0);
+}
+
+/* Optional: Add hover effects for input fields */
+.formField input:hover,
+.formField select:hover,
+.formField textarea:hover {
+    border-color: var(--primary-color);
+}
+
+/* Media query for responsiveness */
+@media (max-width: 1024px) {
+    .container {
+        padding: 25px;
+    }
+
+    .header {
+        font-size: 24px;
+    }
+
+    .submitButton {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .header {
+        font-size: 22px;
+    }
+
+    .submitButton {
+        font-size: 16px;
+    }
+}

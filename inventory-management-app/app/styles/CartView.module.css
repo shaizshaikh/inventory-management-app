@@ -1,0 +1,132 @@
+/* CartView.module.css */
+.cart-view {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.cart-view h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+    /* Allows items to wrap on smaller screens */
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+.cart-item h3 {
+    font-size: 18px;
+    margin: 0 10px;
+    color: #555;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.cart-item p {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.cart-item button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: red;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cart-item button:hover {
+    background-color: darkred;
+}
+
+/* New Quantity Controls */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-button {
+    padding: 3px 8px;
+    margin: 0 5px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.quantity-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.quantity-button:hover {
+    background-color: #0056b3;
+}
+
+.quantity-display {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+/* Status styling */
+.out-of-stock {
+    color: red;
+    font-weight: bold;
+}
+
+.in-stock {
+    color: green;
+    font-weight: bold;
+}
+
+/* Back button */
+.btn-back {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-back:hover {
+    background-color: #0056b3;
+}
