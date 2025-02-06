@@ -1,119 +1,170 @@
+.dashboard {
+    font-family: Arial, sans-serif;
+    background-color: #001f3d;
+    /* Serulion Dark Blue background */
+    color: #e0e0e0;
+    /* Soft light text color */
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #002d56;
+    /* Darker header background */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.hamburgerMenu {
+    position: relative;
+}
+
+.hamburgerButton {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    /* Soft light text for the button */
+    cursor: pointer;
+}
+
+.hamburgerButton:hover {
+    color: #fff;
+    /* Hover effect */
+}
+
+.menuDropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: #00334e;
+    /* Dark background for the dropdown */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    z-index: 10;
+    display: block;
+    /* Ensure the dropdown container is block-level */
+}
+
+.menuDropdown button {
+    display: block;
+    /* Stack buttons vertically */
+    width: 100%;
+    padding: 12px 20px;
+    /* Increased padding for easier interaction */
+    text-align: left;
+    border: none;
+    background: none;
+    color: #e0e0e0;
+    /* Soft text color */
+    cursor: pointer;
+    font-size: 16px;
+    /* Font size for readability */
+}
+
+.menuDropdown button:hover {
+    background: #004d6e;
+    /* Slightly lighter blue on hover */
+}
+
+.menuDropdown button:focus {
+    background: #005f7a;
+    /* Focus effect */
+    outline: none;
+}
+
+.section {
+    padding: 20px;
+}
+
 .productList {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    /* Set exactly 5 columns by default */
     gap: 30px;
-    /* Increased gap for more space between products */
     padding: 0;
     margin: 0 auto;
     position: relative;
 }
 
 .productContainer {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: #002d56;
+    /* Dark background for product cards */
+    border: 1px solid #005377;
     border-radius: 8px;
     padding: 20px;
-    /* Increased padding for better spacing */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
     text-align: center;
-    /* Center-align content for a cleaner look */
     height: 100%;
-    /* Ensuring all containers are the same height */
 }
 
 .productContainer:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
 .thumbnail {
     width: 100%;
     height: auto;
     max-height: 180px;
-    /* Increased thumbnail size */
     border-radius: 8px;
     object-fit: cover;
     margin-bottom: 15px;
-    /* Increased margin for more space */
 }
 
 .productContainer h4 {
     font-size: 18px;
-    /* Increased font size for better readability */
-    color: #333;
+    color: #e0e0e0;
+    /* Light color for titles */
     margin: 15px 0;
 }
 
 .productContainer p {
     font-size: 14px;
-    color: #555;
+    color: #c4c4c4;
+    /* Lighter color for descriptions */
     margin: 5px 0;
 }
 
 .productContainer .price {
     font-weight: bold;
-    color: #0070f3;
+    color: #00b4d8;
+    /* Light cyan color for price */
     margin-top: 10px;
 }
 
-/* Icon for Load More */
-.loadMoreIcon {
-    position: absolute;
-    right: 10px;
-    /* Adjust distance from the right edge */
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
-    /* Size of the icon */
-    color: #0070f3;
-    /* Icon color */
-    cursor: pointer;
+.updateProductButton {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
     border: none;
-    /* Remove button-like border */
-    background: none;
-    /* Transparent background */
-    border-radius: 50%;
-    /* Circular button effect */
-    width: 40px;
-    /* Small circular size */
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s, transform 0.3s;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
 }
 
-.loadMoreIcon:hover {
-    background-color: rgba(0, 112, 243, 0.1);
-    /* Light hover effect */
-    transform: scale(1.1);
-    /* Slight zoom effect */
+.updateProductButton:hover {
+    background-color: #218838;
 }
 
-/* Media query for medium screens */
 @media (max-width: 800px) {
     .productList {
         grid-template-columns: repeat(3, 1fr);
-        /* 3 columns for medium screens */
     }
 }
 
-/* Media query for small screens */
 @media (max-width: 600px) {
     .productList {
         grid-template-columns: repeat(2, 1fr);
-        /* 2 columns for smaller screens */
         gap: 15px;
-        /* Reduce gap for smaller screens */
     }
 }
 
-/* Media query for very small screens */
 @media (max-width: 400px) {
     .productList {
         grid-template-columns: 1fr;
-        /* 1 column for very small screens */
     }
 }

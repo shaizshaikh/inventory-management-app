@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: shaizali/docker-compose-frontend:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - event-processor
+
+  event-processor:
+    image: shaizali/docker-compose-event-processor:latest
+    volumes:
+      - /app

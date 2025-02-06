@@ -1,13 +1,11 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { auth } from '../../utils/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styles from '../styles/ProductForm.module.css'; // Assuming this contains only form-specific styles
 
-export default function CreateProduct({ prefillData = null }) {
+export default function CreateProduct({ prefillData = null, onClose = () => {} }) {
     const [formData, setFormData] = useState({
         gender: '',
         productTitle: '',
@@ -22,9 +20,7 @@ export default function CreateProduct({ prefillData = null }) {
     });
 
     const [user, setUser] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
         if (prefillData) {
@@ -97,9 +93,7 @@ export default function CreateProduct({ prefillData = null }) {
                     shipping: '',
                 });
 
-                setTimeout(() => {
-                    router.push('/dashboard');
-                }, 2000); // Wait for 2 seconds before redirecting
+                onClose(); // Close the modal after successful submission
             } else {
                 const error = await response.json();
                 toast.error(error.message || 'Error uploading product.');
@@ -112,12 +106,12 @@ export default function CreateProduct({ prefillData = null }) {
     };
 
     return (
-        <div className="form-container">
-            <ToastContainer /> {/* Toast container for notifications */}
+        <>
+            <ToastContainer />
             <h1>{prefillData ? 'Update Product' : 'Create a New Product'}</h1>
 
-            <form onSubmit={handleSubmit} className="product-form">
-                <div className="form-group">
+            <form onSubmit={handleSubmit} className={styles.productForm}>
+                <div className={styles.formGroup}>
                     <label>Gender:</label>
                     <div>
                         <label>
@@ -143,7 +137,7 @@ export default function CreateProduct({ prefillData = null }) {
                     </div>
                 </div>
 
-                <div className="form-group">
+                <div className={styles.formGroup}>
                     <label>Product Title:</label>
                     <input
                         type="text"
@@ -154,7 +148,7 @@ export default function CreateProduct({ prefillData = null }) {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className={styles.formGroup}>
                     <label>Product Images:</label>
                     <input
                         type="file"
@@ -165,7 +159,7 @@ export default function CreateProduct({ prefillData = null }) {
                     />
                 </div>
 
-                <div className="form-group">
+                <div className={styles.formGroup}>
                     <label>Description:</label>
                     <textarea
                         name="description"
@@ -175,7 +169,7 @@ export default function CreateProduct({ prefillData = null }) {
                     ></textarea>
                 </div>
 
-                <div className="form-group">
+                <div className={styles.formGroup}>
                     <label>Price:</label>
                     <input
                         type="number"
@@ -187,7 +181,7 @@ export default function CreateProduct({ prefillData = null }) {
                 </div>
 
                 {['size', 'color', 'material', 'quantity', 'shipping'].map((field) => (
-                    <div className="form-group" key={field}>
+                    <div className={styles.formGroup} key={field}>
                         <label>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
                         <input
                             type="text"
@@ -199,10 +193,10 @@ export default function CreateProduct({ prefillData = null }) {
                     </div>
                 ))}
 
-                <button type="submit" disabled={isSubmitting} className="submit-btn">
+                <button type="submit" disabled={isSubmitting} className={styles.submitBtn}>
                     {isSubmitting ? 'Submitting...' : prefillData ? 'Update Product' : 'Submit Product'}
                 </button>
             </form>
-        </div>
+        </>
     );
 }

@@ -13,8 +13,10 @@
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: #fafafa;
-  color: #333;
+  background-color: #003366;
+  /* Serulion Dark Blue */
+  color: #fff;
+  /* White text to contrast with the dark blue background */
   font-family: Arial, sans-serif;
   transition: opacity 0.3s ease-in-out;
 }
@@ -129,6 +131,55 @@ button:focus {
 .product-card button {
   margin-top: auto;
   /* Push the button to the bottom of the card */
+}
+
+/* Styling for the hamburger menu */
+.hamburger-menu {
+  position: absolute;
+  /* Position the menu at the top-right corner */
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.hamburger-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.hamburger-button:hover {
+  color: #ffcc00;
+  /* Add hover effect for the button */
+}
+
+/* Menu dropdown */
+.menu-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #003366;
+  /* Dark blue background for the menu */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.menu-list {
+  list-style-type: none;
+  padding: 10px;
+}
+
+.menu-list li {
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+}
+
+.menu-list li:hover {
+  background-color: #0056b3;
 }
 
 /* Responsive adjustments */

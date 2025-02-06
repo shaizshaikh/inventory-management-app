@@ -1,10 +1,12 @@
 /* CartView.module.css */
 .cart-view {
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #f0f0f0;
+    /* Background color matching homepage and dashboard */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
+    max-width: 1200px;
+    /* Ensure that the cart has enough width for grid */
     margin: 20px auto;
     text-align: center;
 }
@@ -15,46 +17,57 @@
     color: #333;
 }
 
+/* This is the grid container for the cart items */
+.cart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* Automatically adjust number of columns */
+    gap: 20px;
+    /* Space between items */
+    margin-top: 20px;
+}
+
+/* Style for individual cart items within the grid */
 .cart-item {
     display: flex;
+    flex-direction: column;
+    /* Stack content vertically inside each item */
     align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
+    padding: 15px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    flex-wrap: wrap;
-    /* Allows items to wrap on smaller screens */
+    text-align: center;
 }
 
 .cart-item:last-child {
     border-bottom: none;
 }
 
+/* Cart image style */
 .cart-item-image {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 4px;
-    margin-right: 15px;
+    margin-bottom: 10px;
 }
 
+/* Title and price for each item */
 .cart-item h3 {
     font-size: 18px;
-    margin: 0 10px;
+    margin: 0;
     color: #555;
-    flex-grow: 1;
-    text-align: left;
+    font-weight: bold;
 }
 
 .cart-item p {
-    margin: 0;
+    margin: 5px 0;
     color: #777;
     font-size: 14px;
 }
 
+/* Button for removing items from the cart */
 .cart-item button {
     padding: 8px 12px;
     border: none;
@@ -70,11 +83,12 @@
     background-color: darkred;
 }
 
-/* New Quantity Controls */
+/* Quantity controls for each product */
 .quantity-controls {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 10px;
 }
 
 .quantity-button {
@@ -103,7 +117,7 @@
     margin: 0 10px;
 }
 
-/* Status styling */
+/* Status classes for in-stock and out-of-stock items */
 .out-of-stock {
     color: red;
     font-weight: bold;
@@ -114,7 +128,7 @@
     font-weight: bold;
 }
 
-/* Back button */
+/* Back button for returning to products view */
 .btn-back {
     padding: 10px 20px;
     margin-top: 20px;

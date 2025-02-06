@@ -12,30 +12,19 @@ export function GET(req, { res }) {
         io.on('connection', (socket) => {
             console.log('A client connected:', socket.id);
 
-            // Existing broadcast functionality
-            socket.on('broadcastEvent', (data) => {
-                console.log('Broadcasting data:', data);
-                io.emit('dashboardUpdate', data);
+            // Broadcast when a user clicks 'View Cart'
+            socket.on('viewCart', (data) => {
+                console.log('User clicked on View Cart:', data);
+                io.emit('dashboardUpdate', { action: 'viewCart' });
             });
 
-            // Dynamic data fetching and sending to the homepage
-            socket.on('fetchProductData', async () => {
-                console.log('Received request to fetch product data.');
-                try {
-                    // Fetch product data dynamically (mock implementation)
-                    const products = await fetch('/api/get-all-products', {
-                        method: 'GET',
-                        headers: { 'Content-Type': 'application/json' },
-                    }).then((res) => res.json());
-
-                    console.log('Sending product data to client:', products);
-                    socket.emit('productData', products);
-                } catch (error) {
-                    console.error('Error fetching product data:', error);
-                    socket.emit('error', { message: 'Failed to fetch product data.' });
-                }
+            // Broadcast when a user clicks 'Back to Products'
+            socket.on('backToProducts', (data) => {
+                console.log('User clicked on Back to Products:', data);
+                io.emit('dashboardUpdate', { action: 'backToProducts' });
             });
 
+            // Disconnect handler
             socket.on('disconnect', () => {
                 console.log('Client disconnected:', socket.id);
             });
