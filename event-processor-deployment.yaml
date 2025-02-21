@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-processor
+  namespace: inventory-system  # Use the namespace you created
+spec:
+  replicas: 1  # Runs only one instance for now
+  selector:
+    matchLabels:
+      app: event-processor
+  template:
+    metadata:
+      labels:
+        app: event-processor
+    spec:
+      containers:
+        - name: event-processor
+          image: shaizali/inventory-event-processor:latest  # Replace with your actual image
+          imagePullPolicy: Always  # Always pull the latest image

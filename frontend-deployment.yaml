@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-frontend
+  namespace: inventory-system  # Same namespace as event-processor
+spec:
+  replicas: 1  # Runs only one instance for now
+  selector:
+    matchLabels:
+      app: inventory-frontend
+  template:
+    metadata:
+      labels:
+        app: inventory-frontend
+    spec:
+      containers:
+        - name: inventory-frontend
+          image: shaizali/inventory-frontend:latest  # Replace with your actual image
+          imagePullPolicy: Always  # Always pull the latest image
+          ports:
+            - containerPort: 3000  # The Next.js app runs on port 3000
