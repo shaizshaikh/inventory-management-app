@@ -1,19 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { getAuth, signOut } from 'firebase/auth';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { app } from '@/utils/firebaseConfig';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { io } from 'socket.io-client';
 import styles from '../styles/Dashboard.module.css';
 import UpdateProductModal from '../components/UpdateProductModal';
 import CreateProductModal from '../components/CreateProductModal';
 
 export default function Dashboard() {
     const [user, setUser] = useState(null);
-    const [inventoryData, setInventoryData] = useState(null);
+    const [inventoryData, setInventoryData] = useState({});
     const [recentProducts, setRecentProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -21,53 +20,67 @@ export default function Dashboard() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [productToUpdate, setProductToUpdate] = useState(null);
     const [productLimit, setProductLimit] = useState(5);
+    const [totalProducts, setTotalProducts] = useState(0);
 
     const auth = getAuth(app);
     const router = useRouter();
-    const socket = io();
     const menuRef = useRef(null);
     const toggleButtonRef = useRef(null);
 
+    // Auth state listener
     useEffect(() => {
-        const currentUser = auth.currentUser || JSON.parse(localStorage.getItem('user'));
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            if (currentUser) {
+                setUser(currentUser);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                fetchDashboardData(currentUser.email);
+            } else {
+                setUser(null);
+                localStorage.removeItem('user');
+                router.push('/');
+            }
+        });
 
-        if (currentUser) {
-            setUser(currentUser);
-            localStorage.setItem('user', JSON.stringify(currentUser));
-            fetchDashboardData(currentUser.email);
-        } else {
-            setUser(null);
-        }
-    }, [auth]);
+        return () => unsubscribe();
+    }, [auth, router]);
 
+    // Click outside menu handler
     useEffect(() => {
-        if (socket) {
-            socket.on('dashboardUpdate', (data) => {
-                if (data.action === 'viewCart' || data.action === 'backToProducts') {
-                    fetchDashboardData(user?.email);
-                }
-            });
+        const handleClickOutside = (event) => {
+            if (
+                menuOpen &&
+                !menuRef.current?.contains(event.target) &&
+                !toggleButtonRef.current?.contains(event.target)
+            ) {
+                setMenuOpen(false);
+            }
+        };
 
-            return () => socket.off('dashboardUpdate');
-        }
-    }, [socket, user]);
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [menuOpen]);
 
-    const fetchDashboardData = async (sellerId) => {
+    // Fetch dashboard data
+    const fetchDashboardData = useCallback(async (sellerId) => {
         setIsLoading(true);
         try {
             const [inventoryRes, productsRes] = await Promise.all([
                 fetchInventoryData(sellerId),
                 fetchRecentProducts(sellerId, productLimit),
             ]);
-            setInventoryData(inventoryRes);
-            setRecentProducts(productsRes);
+
+            setInventoryData(inventoryRes || {});
+            setRecentProducts(productsRes.products || []);
+            setTotalProducts(productsRes.totalProducts || 0);
         } catch (err) {
-            console.error('Error fetching dashboard data:', err);
+            toast.error('Failed to load dashboard data');
+            console.error('Dashboard fetch error:', err);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [productLimit]);
 
+    // Fetch inventory data
     const fetchInventoryData = async (sellerId) => {
         try {
             const response = await fetch('/api/get-inventory', {
@@ -75,16 +88,17 @@ export default function Dashboard() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sellerId }),
             });
-            if (response.ok) {
-                return await response.json();
-            } else {
-                console.error('Error fetching inventory:', await response.json());
-            }
+
+            if (!response.ok) throw new Error('Inventory fetch failed');
+            return await response.json();
         } catch (err) {
-            console.error('Error fetching inventory:', err);
+            toast.error('Failed to load inventory');
+            console.error('Inventory error:', err);
+            return {};
         }
     };
 
+    // Fetch recent products
     const fetchRecentProducts = async (sellerId, limit) => {
         try {
             const response = await fetch('/api/get-products', {
@@ -92,22 +106,21 @@ export default function Dashboard() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sellerId, limit }),
             });
-            if (response.ok) {
-                const data = await response.json();
-                return data.products || [];
-            } else {
-                console.error('Error fetching products:', await response.json());
-            }
+
+            if (!response.ok) throw new Error('Products fetch failed');
+            const data = await response.json();
+            return data;
         } catch (err) {
-            console.error('Error fetching products:', err);
+            toast.error('Failed to load products');
+            console.error('Products error:', err);
+            return { products: [], totalProducts: 0 };
         }
     };
 
+    // Logout handler
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            setUser(null);
-            localStorage.removeItem('user');
             router.push('/');
         } catch (err) {
             toast.error('Error logging out. Please try again.');
@@ -115,36 +128,38 @@ export default function Dashboard() {
         }
     };
 
+    // Menu toggle handler
     const handleMenuToggle = () => {
         setMenuOpen((prev) => !prev);
     };
 
+    // Go to home handler
     const handleGoToHome = () => {
         setMenuOpen(false);
         router.push('/');
     };
 
+    // Add new product handler
     const handleAddNewProduct = () => {
-        setMenuOpen(false); // Close the menu after clicking
+        setMenuOpen(false);
         setShowCreateModal(true);
     };
 
+    // Update product handler
     const handleUpdateProduct = (product) => {
-        setMenuOpen(false); // Close the menu after clicking
+        setMenuOpen(false);
         setProductToUpdate(product);
         setShowUpdateModal(true);
     };
 
-    const handleLoadMore = () => {
-        setProductLimit((prevLimit) => prevLimit + 5);
-    };
-
+    // Refetch data when product limit changes
     useEffect(() => {
-        if (user) {
+        if (user?.email) {
             fetchDashboardData(user.email);
         }
-    }, [productLimit]);
+    }, [productLimit, fetchDashboardData, user?.email]);
 
+    // Loading state
     if (isLoading) {
         return (
             <div className={styles.loaderContainer}>
@@ -154,6 +169,7 @@ export default function Dashboard() {
         );
     }
 
+    // Unauthenticated state
     if (!user) {
         return (
             <div className={styles.unauthenticated}>
@@ -200,15 +216,11 @@ export default function Dashboard() {
             <main>
                 <section className={styles.section}>
                     <h3>Inventory Summary</h3>
-                    {inventoryData ? (
-                        <div aria-live="polite">
-                            <p><strong>Total Items:</strong> {inventoryData.totalItems || '0'}</p>
-                            <p><strong>Categories:</strong> {inventoryData.categories?.join(', ') || 'None'}</p>
-                            <p><strong>Low Stock Items:</strong> {inventoryData.lowStockItems || '0'}</p>
-                        </div>
-                    ) : (
-                        <p>No inventory data available.</p>
-                    )}
+                    <div aria-live="polite">
+                        <p><strong>Total Items:</strong> {inventoryData.totalItems || '0'}</p>
+                        <p><strong>Categories:</strong> {inventoryData.categories?.join(', ') || 'None'}</p>
+                        <p><strong>Low Stock Items:</strong> {inventoryData.lowStockItems || '0'}</p>
+                    </div>
                 </section>
 
                 <section className={styles.section}>
@@ -216,7 +228,7 @@ export default function Dashboard() {
                     {recentProducts.length > 0 ? (
                         <div className={styles.productList} aria-live="polite">
                             {recentProducts.map((product, index) => (
-                                <div key={index} className={styles.productContainer}>
+                                <div key={product.id || index} className={styles.productContainer}>
                                     {product.thumbnailUrl && (
                                         <img
                                             src={product.thumbnailUrl}
@@ -238,20 +250,6 @@ export default function Dashboard() {
                                     </button>
                                 </div>
                             ))}
-                            <button
-                                onClick={handleLoadMore}
-                                style={{
-                                    fontSize: '8px',
-                                    padding: '2px 4px',
-                                    marginTop: '5px',
-                                    backgroundColor: '#ddd',
-                                    border: '1px solid #ccc',
-                                    cursor: 'pointer',
-                                }}
-                                aria-label="Load more products"
-                            >
-                                Load More
-                            </button>
                         </div>
                     ) : (
                         <p>No recent products found.</p>
@@ -264,7 +262,7 @@ export default function Dashboard() {
                 <UpdateProductModal
                     product={productToUpdate}
                     onClose={() => setShowUpdateModal(false)}
-                    onUpdate={(updatedProduct) => {
+                    onUpdate={() => {
                         setShowUpdateModal(false);
                         if (user) {
                             fetchDashboardData(user.email);
@@ -275,7 +273,7 @@ export default function Dashboard() {
             {showCreateModal && (
                 <CreateProductModal
                     onClose={() => setShowCreateModal(false)}
-                    onCreate={(newProduct) => {
+                    onCreate={() => {
                         setShowCreateModal(false);
                         if (user) {
                             fetchDashboardData(user.email);

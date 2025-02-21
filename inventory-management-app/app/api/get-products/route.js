@@ -15,7 +15,7 @@ const tableClient = TableClient.fromConnectionString(tableConnectionString, tabl
 export async function POST(req) {
     try {
         const body = await req.json();
-        const { sellerId, limit = 5 } = body; // Default limit is 5 if not provided
+        const { sellerId } = body;
 
         if (!sellerId) {
             return NextResponse.json({ error: 'Seller ID is required.' }, { status: 400 });
@@ -27,12 +27,9 @@ export async function POST(req) {
             queryOptions: { filter: `PartitionKey eq '${sellerId}'` },
         });
 
-        // Collect products with pagination
-        let count = 0;
+        // Collect all products without pagination
         for await (const entity of entityIter) {
-            if (count >= limit) break; // Stop once we reach the limit
             entities.push(entity);
-            count++;
         }
 
         // Sort by timestamp to ensure the most recent products come first
