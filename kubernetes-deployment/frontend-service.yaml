@@ -5,11 +5,9 @@ metadata:
   namespace: inventory-system
 spec:
   selector:
-    app: frontend
+    app: inventory-frontend
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-      nodePort: 30007  # Kubernetes will expose this port
-  type: NodePort
-
+  type: ClusterIP  # Ingress requires ClusterIP services
